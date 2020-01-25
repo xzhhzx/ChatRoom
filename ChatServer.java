@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
 
-class ChatServer{
+public class ChatServer{
 
     public int port;
-    public List<String> users;
-    private ServerSocket serverSocket;
+    public static Map<String, SCThread> user_connections;
+    public ServerSocket serverSocket;
 
     // Individual
     private Socket server;
@@ -17,7 +17,7 @@ class ChatServer{
 
 
     public void start(int port) throws Exception{
-        users = new ArrayList<String>();
+        user_connections = new HashMap<String, SCThread>();
         serverSocket = new ServerSocket(port);      // 1. Create a socket
         System.out.println("Server started at port " + port +" ...Waiting for clients...");
     }
@@ -29,16 +29,16 @@ class ChatServer{
         in = new DataInputStream(server.getInputStream());          // 3. IO
         out = new DataOutputStream(server.getOutputStream());
         String username = receive();        // Get new user's name
-        this.users.add(username);           // Add to list
+        // this.users.add(username);           // Add to list
 
         System.out.println("Server reached client " + username +"!");
         
 
         // Create new thread for new user
-        // Thread thr = new SCThread(server, in, out);
-        Thread thr = new SCThread(server, in, out);
-        thr.start();
-        
+        SCThread thr = new SCThread(this, server, in, out);
+        // Thread thr = new SCThread(server);
+        thr.start();  
+        ServerThreadManagement.user_connections.put(username, thr);
     }
 
     public String receive() throws Exception{
@@ -50,7 +50,9 @@ class ChatServer{
 
 
     
-
+    // public static SCThread getUserThread(String user){
+    //     return user_connections.get(user);
+    // }
 
 
 

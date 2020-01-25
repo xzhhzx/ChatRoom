@@ -73,11 +73,14 @@ class ChatClient{
         catch(Exception e){System.out.println("CONNECTION ERROR!");}
         
 
+        // 4.Send message
+        Transmit tx = new Transmit(me);       // Start Transmit thread
+        tx.start();
 
-        // Transmit tx = new Transmit(me);       // Start Transmit thread
-        // tx.start();
-        // Receive rx = new Receive();         // Start Receive thread
-        // rx.start();
+        // 5.Receive message
+        Receive rx = new Receive(me);         // Start Receive thread
+        rx.start();
+        
 
         // try{
 		// 	tx.join();
@@ -87,47 +90,47 @@ class ChatClient{
 
 
 
-        while(true){
-            // 4.Enter message
-            String m = "";
-            try{
-                System.out.print("Please enter your message: ");
-                m = br.readLine();
-            }
-            catch(Exception e){}
+        // while(true){
+        //     // 4.Enter message
+        //     String m = "";
+        //     try{
+        //         System.out.print("Please enter your message: ");
+        //         m = br.readLine();
+        //     }
+        //     catch(Exception e){}
 
 
-            // 5.Send message to Server
-            try{
-                // Message message = new Message(m)
-                me.send(m);
+        //     // 5.Send message to Server
+        //     try{
+        //         // Message message = new Message(m)
+        //         me.send(m);
 
-                if(m.equals("Exit")){
-                    break;
-                }
-            }
-            catch(Exception e){}
-
-
-
-            // 6.Receive message (at the same time)
-            // ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
-			// Message m=(Message)ois.readObject();
-            try{
-                me.receive();
-            }
-            catch(Exception e){System.out.println("RECEIVE ERROR!");}
-
-
-        }
+        //         if(m.equals("Exit")){
+        //             break;
+        //         }
+        //     }
+        //     catch(Exception e){}
 
 
 
-        try{
-            me.stop();
-            System.out.println(me.username + " disconnected!");
-        }
-        catch(Exception e){System.out.println("DISCONNECTION ERROR!");}
+        //     // 6.Receive message (at the same time)
+        //     // ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
+		// 	// Message m=(Message)ois.readObject();
+        //     // try{
+        //     //     me.receive();
+        //     // }
+        //     // catch(Exception e){System.out.println("RECEIVE ERROR!");}
+
+
+        // }
+
+
+        // 6.Disconnect
+        // try{
+        //     me.stop();
+        //     System.out.println(me.username + " disconnected!");
+        // }
+        // catch(Exception e){System.out.println("DISCONNECTION ERROR!");}
         
         
         

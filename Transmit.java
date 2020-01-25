@@ -21,12 +21,12 @@ public class Transmit extends Thread{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         while(true){
-            System.out.println("run()");
+            // System.out.println("run()");
 
             // 4.Enter message
             String m = "";
             try{
-                System.out.print("Please enter your message: ");
+                System.out.println("Please enter your message: ");
                 m = br.readLine();
             }
             catch(Exception e){}
