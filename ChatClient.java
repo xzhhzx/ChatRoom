@@ -24,7 +24,7 @@ class ChatClient{
     }
 
 
-    public void stop() throws Exception{
+    public void disconnect() throws Exception{
         client.close(); 
         in.close(); 
         out.close();
@@ -90,44 +90,11 @@ class ChatClient{
 
 
 
-        // while(true){
-        //     // 4.Enter message
-        //     String m = "";
-        //     try{
-        //         System.out.print("Please enter your message: ");
-        //         m = br.readLine();
-        //     }
-        //     catch(Exception e){}
-
-
-        //     // 5.Send message to Server
-        //     try{
-        //         // Message message = new Message(m)
-        //         me.send(m);
-
-        //         if(m.equals("Exit")){
-        //             break;
-        //         }
-        //     }
-        //     catch(Exception e){}
-
-
-
-        //     // 6.Receive message (at the same time)
-        //     // ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
-		// 	// Message m=(Message)ois.readObject();
-        //     // try{
-        //     //     me.receive();
-        //     // }
-        //     // catch(Exception e){System.out.println("RECEIVE ERROR!");}
-
-
-        // }
 
 
         // 6.Disconnect
         // try{
-        //     me.stop();
+        //     me.disconnect();
         //     System.out.println(me.username + " disconnected!");
         // }
         // catch(Exception e){System.out.println("DISCONNECTION ERROR!");}

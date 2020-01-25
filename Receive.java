@@ -18,8 +18,6 @@ public class Receive extends Thread{
     @Override
     public void run()
 	{
-        // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         while(true){
             try{
                 me.receive();

@@ -35,7 +35,7 @@ public class ChatServer{
         
 
         // Create new thread for new user
-        SCThread thr = new SCThread(this, server, in, out);
+        SCThread thr = new SCThread(server, in, out, username);
         // Thread thr = new SCThread(server);
         thr.start();  
         ServerThreadManagement.user_connections.put(username, thr);
@@ -47,12 +47,6 @@ public class ChatServer{
         System.out.println("Server received: "+line);
         return line;
     }
-
-
-    
-    // public static SCThread getUserThread(String user){
-    //     return user_connections.get(user);
-    // }
 
 
 

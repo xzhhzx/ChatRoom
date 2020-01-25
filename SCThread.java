@@ -9,7 +9,8 @@ public class SCThread extends Thread{
     public Socket server;
     public DataInputStream in;
     public DataOutputStream out;
-    public ChatServer cs;
+    // public ChatServer cs;
+    public String username;
 
 
 
@@ -20,26 +21,24 @@ public class SCThread extends Thread{
     // }
 
 
-    public SCThread(ChatServer cs, Socket server, DataInputStream in, DataOutputStream out){
+    public SCThread(Socket server, DataInputStream in, DataOutputStream out, String username){
         this.server = server;
         this.in = in;
         this.out = out;
-        this.cs = cs;
+        this.username = username;
     }
 
     // Send back to the same user
     public void send(String s) throws Exception{
         out.writeUTF(s);
-        System.out.println("Server send: "+s);
+        System.out.println("Server send to [ " + this.username + " ] : "+s);
     }
 
     // Send to other user
     public void send(String s, String other_user) throws Exception{
-        // System.out.println(cs.user_connections);
-        // cs.user_connections.get(other_user).send(s);
-        SCThread receiverThread = ServerThreadManagement.user_connections.get(other_user);
-        receiverThread.out.writeUTF(s);
-        System.out.println("Server send (to other user): "+s);
+        // cs.user_connections.get(other_user).send(s);         // DOESN'T WORK, BUT WHY?
+        SCThread receiverThread = ServerThreadManagement.user_connections.get(other_user);      // ABOVE PROBLEM SOLVED WITH A HELPER CLASS
+        receiverThread.send(s);
     }
 
     public String receive() throws Exception{
@@ -54,7 +53,7 @@ public class SCThread extends Thread{
         server.close(); 
         out.close();
         in.close(); 
-        System.out.println("Server closed.");
+        System.out.println("Server connection to [ " + this.username + " ] closed.");
     }
 
 
@@ -62,18 +61,40 @@ public class SCThread extends Thread{
     public void run(){
         try{
             while(true){
-                String m = this.receive();        // 2.Receive message
 
+                // 1.Receive message
+                String m = this.receive();        
 
-                // Resolve message and send to corresponding user
-                if(m.matches("@.+\\s.+")){
+                // 2.Resolve message and perform some operations          
+                // (Could be resolved at client side i.o.t minimize server resource usage. And message is wrapped in a Message class)     
+                
+                if(m.matches("@.+\\s.+")){                              // [Message type 1]: Send to corresponding user
                     // System.out.println("       Matches!");
                     String receiver = m.split(" ")[0].substring(1);
                     String message = m.split(" ")[1];
-
-                    System.out.println(receiver + " " + message);
+                    // System.out.println(receiver + " " + message);
                     this.send(message, receiver);
+                }
 
+                else if(m.equals("WHOIS")){                             // [Message type 2]: WHOIS
+                    this.send(ServerThreadManagement.user_connections.keySet().toString());     
+                }
+
+
+                else if(m.equals("LOGOUT")){
+                    this.disconnect();
+                }
+
+
+                else if(m.equals("PENGU")){
+                    // TODO
+                }
+
+                else{               // [Message type 5]: Broadcast
+                    for(String username : ServerThreadManagement.user_connections.keySet()){
+                        this.send(m, username);
+                    }
+                    
                 }
 
 
@@ -84,7 +105,7 @@ public class SCThread extends Thread{
         }
         catch(Exception e){
             System.out.println(e);
-            // disconnect();
+            // throw e;
         }
     }
 

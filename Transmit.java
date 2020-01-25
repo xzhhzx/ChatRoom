@@ -21,9 +21,8 @@ public class Transmit extends Thread{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         while(true){
-            // System.out.println("run()");
 
-            // 4.Enter message
+            // 1.Enter message
             String m = "";
             try{
                 System.out.println("Please enter your message: ");
@@ -32,12 +31,13 @@ public class Transmit extends Thread{
             catch(Exception e){}
 
 
-            // 5.Send message to Server
+            // 2.Send message to Server
             try{
                 // Message message = new Message(m)
                 me.send(m);
 
-                if(m.equals("Exit")){
+                if(m.equals("LOGOUT")){
+                    me.disconnect();
                     break;
                 }
             }
