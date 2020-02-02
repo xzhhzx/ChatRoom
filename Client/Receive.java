@@ -19,10 +19,14 @@ public class Receive extends Thread{
     public void run()
 	{
         while(true){
-            try{
-                me.receive();
+            if(!me.DISCONNECT){         // volatile boolean
+                try{
+                    me.receive();
+                }
+                catch(Exception e){System.out.println("RECEIVE ERROR!");}
             }
-            catch(Exception e){System.out.println("RECEIVE ERROR!");}
+
+            else break;
         }
     }
 }

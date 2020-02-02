@@ -17,7 +17,7 @@ If a user sends <u>LOGOUT</u>, the connection of this user is closed and all str
 
 If a user sends <u>PENGU</u>, a cool penguin fact will be sent to all currently connected participants (creativity is welcome here :)).
 
-<u>All other messages</u> are considered normal messages and are simply sent to all currently connected clients.Of course, you are welcome to consider other things. If you do this, you can, for example, send a welcome message to each client after connecting, in which all functions are listed.
+<u>All other messages</u> are considered normal messages and are simply sent to all currently connected clients. Of course, you are welcome to consider other things. If you do this, you can, for example, send a welcome message to each client after connecting, in which all functions are listed.
 
 # Server
 You should implement a ChatServer that accepts connections using sockets.
@@ -41,4 +41,3 @@ The classes **<u>ObjectInputStream</u>** and **<u>ObjectOutputStream</u>** allow
 
 To get the current time, you can use LocalTime.now().
 Process that is easier to read
-Your program doesn't have to send the exact same messages, this is just an example of what it might look like. The requirements are above:

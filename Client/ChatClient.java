@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.LocalTime;
 
 class ChatClient{
 
@@ -9,17 +10,16 @@ class ChatClient{
     private Socket client;
     private DataOutputStream out;
     private DataInputStream in;
+    public volatile boolean DISCONNECT = false;
+
 
     public void connect(String IP, int port) throws Exception{
         client = new Socket(IP, port);
-        // send(username);
         out = new DataOutputStream(client.getOutputStream());      // Write
-        in = new DataInputStream(client.getInputStream());          // Read
-        // System.out.println("Client started connection...");
+        in = new DataInputStream(client.getInputStream());         // Read
     }
 
     public void send(String s) throws Exception{
-        // System.out.println("Client send: "+s);
         out.writeUTF(s);       // Send message
     }
 
@@ -35,7 +35,7 @@ class ChatClient{
     public String receive() throws Exception{
             
         String line = in.readUTF();
-        System.out.println("Client received: "+line);
+        System.out.println(LocalTime.now() + " Client received: "+line);
         return line;
     }
 
@@ -55,7 +55,6 @@ class ChatClient{
 
         // 2.Enter username
         ChatClient me = new ChatClient();
-
         System.out.println("Please enter your name: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try{
@@ -82,24 +81,20 @@ class ChatClient{
         rx.start();
         
 
-        // try{
-		// 	tx.join();
-		// } catch(InterruptedException e){
-		// 	System.out.println("InterruptedException!");
-		// }
+        // 6.Wait until stop
+        try{
+            tx.join();
+            rx.join();
+        }
+        catch(Exception e){System.out.println("join() ERROR!");}
 
 
 
-
-
-        // 6.Disconnect
-        // try{
-        //     me.disconnect();
-        //     System.out.println(me.username + " disconnected!");
-        // }
-        // catch(Exception e){System.out.println("DISCONNECTION ERROR!");}
-        
-        
+        // 7.Disconnect
+        try{
+            me.disconnect();
+        }
+        catch(Exception e){System.out.println("DISCONNECTION ERROR!");}
         
     }
 }

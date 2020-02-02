@@ -9,17 +9,7 @@ public class SCThread extends Thread{
     public Socket server;
     public DataInputStream in;
     public DataOutputStream out;
-    // public ChatServer cs;
     public String username;
-
-
-
-    // public SCThread(Socket server){
-    //     this.server = server;
-    //     in = new DataInputStream(server.getInputStream());     
-    //     out = new DataOutputStream(server.getOutputStream());
-    // }
-
 
     public SCThread(Socket server, DataInputStream in, DataOutputStream out, String username){
         this.server = server;
@@ -67,12 +57,10 @@ public class SCThread extends Thread{
 
                 // 2.Resolve message and perform some operations          
                 // (Could be resolved at client side i.o.t minimize server resource usage. And message is wrapped in a Message class)     
-                
+
                 if(m.matches("@.+\\s.+")){                              // [Message type 1]: Send to corresponding user
-                    // System.out.println("       Matches!");
                     String receiver = m.split(" ")[0].substring(1);
-                    String message = m.split(" ")[1];
-                    // System.out.println(receiver + " " + message);
+                    String message = m.substring(receiver.length()+2);
                     this.send(message, receiver);
                 }
 
@@ -82,8 +70,10 @@ public class SCThread extends Thread{
 
 
                 else if(m.equals("LOGOUT")){
-                    this.disconnect();
-                }
+                    ServerThreadManagement.user_connections.remove(this.username);      // Remove user from current connection Map
+                    this.disconnect();          // Close socket, IO stream
+                    break;                      // Close server-side thread
+                }   
 
 
                 else if(m.equals("PENGU")){
@@ -94,13 +84,7 @@ public class SCThread extends Thread{
                     for(String username : ServerThreadManagement.user_connections.keySet()){
                         this.send(m, username);
                     }
-                    
                 }
-
-
-                // else{
-                //     this.send("Received!");           // 3.Send back
-                // }
             }
         }
         catch(Exception e){

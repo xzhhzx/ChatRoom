@@ -7,7 +7,6 @@ import java.util.*;
 public class ChatServer{
 
     public int port;
-    public static Map<String, SCThread> user_connections;
     public ServerSocket serverSocket;
 
     // Individual
@@ -16,30 +15,33 @@ public class ChatServer{
     private DataOutputStream out;
 
 
+    // Open Server
     public void start(int port) throws Exception{
-        user_connections = new HashMap<String, SCThread>();
-        serverSocket = new ServerSocket(port);      // 1. Create a socket
+        // user_connections = new HashMap<String, SCThread>();
+        serverSocket = new ServerSocket(port);              // 1. Create a socket
         System.out.println("Server started at port " + port +" ...Waiting for clients...");
     }
 
 
+    // Accept user
     public void accept() throws Exception{
         
         server = serverSocket.accept();                             // 2. Listen (block)
         in = new DataInputStream(server.getInputStream());          // 3. IO
         out = new DataOutputStream(server.getOutputStream());
-        String username = receive();        // Get new user's name
-        // this.users.add(username);           // Add to list
 
+
+        String username = receive();        // Get new user's name
         System.out.println("Server reached client " + username +"!");
         
 
         // Create new thread for new user
         SCThread thr = new SCThread(server, in, out, username);
-        // Thread thr = new SCThread(server);
-        thr.start();  
+        thr.start(); 
+        // user_connections.put(username, thr);         // ERROR
         ServerThreadManagement.user_connections.put(username, thr);
     }
+
 
     public String receive() throws Exception{
         String line = "";       // Read     
@@ -54,23 +56,14 @@ public class ChatServer{
 
         try{
             ChatServer cs = new ChatServer();
-            // cc.port = 3000;
-            // if(args.length == 1){
-            //     System.out.println("Set port = " + args[0]);
-            //     port = Integer.parseInt(args[0]);
-            // }
-
 
             // 1.Start Server
             cs.start(3000);
-
 
             // 2.Accept users
             while(true){
                 cs.accept();
             }
-
-
         }
         catch(Exception e){throw e;}
     }

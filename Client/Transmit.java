@@ -37,8 +37,10 @@ public class Transmit extends Thread{
                 me.send(m);
 
                 if(m.equals("LOGOUT")){
-                    me.disconnect();
-                    break;
+                    me.DISCONNECT = true;
+                    // me.disconnect();        // Close socket, IO stream
+                                            // Close Receive thread (how?)
+                    break;                  // Close Transmit thread
                 }
             }
             catch(Exception e){}
